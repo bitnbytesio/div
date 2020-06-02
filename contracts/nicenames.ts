@@ -1,3 +1,3 @@
-export interface NiceNames {
+export interface NiceNamesContract {
   [key: string]: string;
 }

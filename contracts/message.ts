@@ -1,3 +1,3 @@
-export interface Messages {
+export interface MessagesContract {
   [key: string]: string;
 }

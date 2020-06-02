@@ -1,10 +1,10 @@
-import { ValidationRule } from "../contracts/validation_rule.ts";
+import { ValidationRuleContract } from "../contracts/validation_rule.ts";
 
-export const array = (value: any): ValidationRule => {
+export function array(value: any): ValidationRuleContract {
   return {
     name: "array",
     handler: (value: any) => {
       return Array.isArray(value);
     },
   };
-};
+}

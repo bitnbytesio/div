@@ -1,21 +1,23 @@
-import { ValidatorError } from "./contracts/validator_error.ts";
-import { Messages } from "./contracts/message.ts";
+import { ValidatorErrorContract } from "./contracts/validator_error.ts";
+import { MessagesContract } from "./contracts/message.ts";
 import {
-  ValidationRule,
-  ValidationRules,
+  ValidationRuleContract,
+  ValidationRulesContract,
 } from "./contracts/validation_rule.ts";
 
-import { NiceNames } from "./contracts/nicenames.ts";
+import { NiceNamesContract } from "./contracts/nicenames.ts";
+
+import * as Messages from "./messages/mod.ts";
 
 export class Validator {
-  errors: ValidatorError = {};
+  errors: ValidatorErrorContract = {};
 
-  niceNames: NiceNames = {};
+  niceNames: NiceNamesContract = {};
 
   constructor(
     private inputs: any,
-    private rules: ValidationRules = {},
-    private messages: Messages = {},
+    private rules: ValidationRulesContract = {},
+    private messages: MessagesContract = {},
   ) {
   }
 
@@ -23,7 +25,7 @@ export class Validator {
    * change attribute names in error messages
    * @param niceNames attribute nice names
    */
-  setNiceNames(niceNames: NiceNames) {
+  setNiceNames(niceNames: NiceNamesContract) {
     this.niceNames = niceNames;
   }
 
@@ -40,7 +42,7 @@ export class Validator {
    * apply this set of rules to inputs
    * @param rules set of rules
    */
-  applyRules(rules: ValidationRules) {
+  applyRules(rules: ValidationRulesContract) {
     this.rules = rules;
   }
 
@@ -68,7 +70,7 @@ export class Validator {
       const attrRules = this.rules[attrName];
 
       if (Array.isArray(attrRules)) {
-        attrRules.forEach((validationRule: ValidationRule) => {
+        attrRules.forEach((validationRule: ValidationRuleContract) => {
           const value = this.getAttributeValue(attrName);
           if (!validationRule.handler(value)) {
             this.createAttributeError(attrName, validationRule.name, value);

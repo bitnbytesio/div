@@ -1,8 +1,8 @@
-import { ValidationRule } from "../contracts/validation_rule.ts";
+import { ValidationRuleContract } from "../contracts/validation_rule.ts";
 
 export function accepted(
   args: Array<string> = ["true", "1", "yes", "on"],
-): ValidationRule {
+): ValidationRuleContract {
   return {
     name: "accepted",
     handler: (value: any) => {

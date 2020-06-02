@@ -1,8 +1,8 @@
-export interface ValidationRule {
+export interface ValidationRuleContract {
   name: string;
   handler: Function;
 }
 
-export interface ValidationRules {
-  [key: string]: Array<ValidationRule>;
+export interface ValidationRulesContract {
+  [key: string]: Array<ValidationRuleContract>;
 }

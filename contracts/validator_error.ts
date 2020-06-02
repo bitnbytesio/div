@@ -1,8 +1,8 @@
-export interface ValidatorErrorAttribute {
+export interface ValidatorErrorAttributeContract {
   message: string;
   rule: string;
 }
 
-export interface ValidatorError {
-  [key: string]: ValidatorErrorAttribute;
+export interface ValidatorErrorContract {
+  [key: string]: ValidatorErrorAttributeContract;
 }
