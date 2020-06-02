@@ -7,3 +7,7 @@ export interface ValidationRuleContract {
 export interface ValidationRulesContract {
   [key: string]: Array<ValidationRuleContract>;
 }
+
+export interface ValidationRuleStringNotationContract {
+  [key: string]: string;
+}

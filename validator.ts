@@ -3,6 +3,7 @@ import { MessagesContract } from "./contracts/message_contracts.ts";
 import {
   ValidationRuleContract,
   ValidationRulesContract,
+  ValidationRuleStringNotationContract,
 } from "./contracts/validation_rule_contracts.ts";
 
 import { NiceNamesContract } from "./contracts/nicenames_contracts.ts";
@@ -29,7 +30,9 @@ export class Validator {
 
   constructor(
     private inputs: any,
-    private rules: ValidationRulesContract = {},
+    private rules:
+      | ValidationRulesContract
+      | ValidationRuleStringNotationContract = {},
     private customMessages: MessagesContract = {},
   ) {
     this.hasCustomMessages = Object.keys(customMessages).length > 0;
