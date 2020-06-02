@@ -11,6 +11,8 @@ import * as MessagesProvider from "./messages/mod.ts";
 
 import { messageParser } from "./util/message_parser_util.ts";
 
+import * as RulesProvider from "./rules/mod.ts";
+
 interface AttributeValidationMinimalInfo {
   attrName: string;
   ruleName: string;
@@ -81,22 +83,78 @@ export class Validator {
     Object.keys(this.rules).forEach((attrName) => {
       const attrRules = this.rules[attrName];
 
-      if (Array.isArray(attrRules)) {
-        attrRules.forEach((validationRule: ValidationRuleContract) => {
-          const attrValue = this.getAttributeValue(attrName);
-          if (!validationRule.handler(attrValue)) {
-            this.createAttributeError({
-              attrName,
-              attrValue,
-              ruleName: validationRule.name,
-              ruleArgs: validationRule.args,
-            });
-          }
-        });
+      if (!attrRules) {
+        return;
       }
+
+      if (Array.isArray(attrRules)) {
+        this.validateAttribute(attrName, attrRules);
+        return;
+      }
+
+      this.validateAttribute(
+        attrName,
+        this.parseStringNotationRules(attrRules),
+      );
     });
 
     return !this.hasErrors();
+  }
+
+  /**
+   * parse rules those are in string notation
+   * @param attrRules attribute string rules
+   */
+  parseStringNotationRules(attrRules: string): Array<ValidationRuleContract> {
+    const rulesStrArr = attrRules.split("|");
+
+    const rulesArr: Array<ValidationRuleContract> = [];
+
+    rulesStrArr.forEach((ruleStr) => {
+      const ruleNameAndArgs: Array<string> = ruleStr.split(":");
+      const [ruleName, ruleArgsStr] = ruleNameAndArgs;
+
+      let args;
+
+      if (ruleArgsStr) {
+        args = ruleArgsStr.split(",");
+      }
+
+      const getKeyValue = (key: string) => (obj: any) => obj[key];
+
+      const ruleObj = getKeyValue(ruleName)(RulesProvider);
+
+      if (!ruleObj) {
+        throw new Error(`Rule ${ruleName} does not exists.`);
+      }
+
+      rulesArr.push(ruleObj(args));
+    });
+
+    return rulesArr;
+  }
+
+  /**
+   * apply rules on attribute
+   * @param attrName attribute name
+   * @param attrRules attribute rules
+   */
+  validateAttribute(
+    attrName: string,
+    attrRules: Array<ValidationRuleContract>,
+  ) {
+    attrRules.forEach((validationRule: ValidationRuleContract) => {
+      const attrValue = this.getAttributeValue(attrName);
+
+      if (!validationRule.handler(attrValue)) {
+        this.createAttributeError({
+          attrName,
+          attrValue,
+          ruleName: validationRule.name,
+          ruleArgs: validationRule.args,
+        });
+      }
+    });
   }
 
   /**
