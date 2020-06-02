@@ -7,18 +7,30 @@ import {
 
 import { NiceNamesContract } from "./contracts/nicenames_contracts.ts";
 
-import * as Messages from "./messages/mod.ts";
+import * as MessagesProvider from "./messages/mod.ts";
+
+import { messageParser } from "./util/message_parser_util.ts";
+
+interface AttributeValidationMinimalInfo {
+  attrName: string;
+  ruleName: string;
+  attrValue?: any;
+  ruleArgs?: any;
+}
 
 export class Validator {
   errors: ValidatorErrorContract = {};
 
   niceNames: NiceNamesContract = {};
 
+  hasCustomMessages: boolean = false;
+
   constructor(
     private inputs: any,
     private rules: ValidationRulesContract = {},
-    private messages: MessagesContract = {},
+    private customMessages: MessagesContract = {},
   ) {
+    this.hasCustomMessages = Object.keys(customMessages).length > 0;
   }
 
   /**
@@ -71,9 +83,14 @@ export class Validator {
 
       if (Array.isArray(attrRules)) {
         attrRules.forEach((validationRule: ValidationRuleContract) => {
-          const value = this.getAttributeValue(attrName);
-          if (!validationRule.handler(value)) {
-            this.createAttributeError(attrName, validationRule.name, value);
+          const attrValue = this.getAttributeValue(attrName);
+          if (!validationRule.handler(attrValue)) {
+            this.createAttributeError({
+              attrName,
+              attrValue,
+              ruleName: validationRule.name,
+              ruleArgs: validationRule.args,
+            });
           }
         });
       }
@@ -97,30 +114,74 @@ export class Validator {
     return Object.keys(this.errors).length > 0;
   }
 
+  getErrors(): any {
+    return this.errors;
+  }
+
   /**
    * this will create error object for attribute
-   * @param attrName attribute name
-   * @param ruleName rule name
-   * @param value attribute value
+   * @param params info object
    */
-  createAttributeError(attrName: string, ruleName: string, value?: any): void {
+  createAttributeError(params: AttributeValidationMinimalInfo): void {
+    const { attrName, ruleName } = params;
     this.errors[attrName] = {
       rule: ruleName,
-      message: this.createAttributeErrorMessage(attrName, ruleName, value),
+      message: this.createAttributeErrorMessage(params),
     };
   }
 
   /**
    * this will return parsed error message as per rule or input
-   * @param attrName attribute name
-   * @param ruleName rule name
-   * @param value attribute value
+   * @param params object with attr and rule name, value, args
    */
   createAttributeErrorMessage(
-    attrName: string,
-    ruleName: string,
-    value?: any,
+    params: AttributeValidationMinimalInfo,
+    useDefaultMessage: boolean = true,
   ): string {
-    return `The ${attrName} validation failed using rule ${ruleName} againest ${value}`;
+    const { attrName, ruleName, attrValue, ruleArgs } = params;
+
+    const messagesCollection: any = MessagesProvider.en.messages;
+    const defaultMessage = messagesCollection.$default;
+
+    let message;
+
+    // check for local scope messages
+    if (this.hasCustomMessages) {
+      message = this.customMessages[`${attrName}.${ruleName}`] ||
+        this.customMessages[ruleName] ||
+        this.customMessages[attrName];
+    }
+
+    // not found in local scope, check for global scope
+    if (!message) {
+      message = (messagesCollection.$custom &&
+        messagesCollection.$custom[`${attrName}.${ruleName}`]) ||
+        messagesCollection[ruleName] ||
+        (messagesCollection.$custom && messagesCollection.$custom[attrName]);
+
+      if (useDefaultMessage && !message) {
+        message = defaultMessage;
+      }
+    }
+
+    let attributeName = attrName;
+
+    // check if we have nice name in local scope
+    if (this.niceNames[attrName]) {
+      attributeName = this.niceNames[attrName];
+    } else if (
+      messagesCollection.$niceNames && messagesCollection.$niceNames[attrName]
+    ) {
+      // check if we have nice name in global scope
+      attributeName = messagesCollection.$niceNames[attrName];
+    }
+
+    return messageParser({
+      message,
+      attrName: attributeName,
+      ruleName,
+      attrValue,
+      ruleArgs,
+    });
   }
 }

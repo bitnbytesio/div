@@ -4,4 +4,4 @@ enum Langs {
 
 export const DEFAULT_LANG: Langs = Langs.en;
 
-export * as en from "./en.ts";
+export * as en from "./en_messages.ts";

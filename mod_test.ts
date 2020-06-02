@@ -11,5 +11,14 @@ Deno.test(
     );
     const passed = v.validate();
     assertEquals(passed, true);
+
+    const vF = new Validator(
+      { tandc: "no" },
+      { tandc: [Rules.accepted()] },
+    );
+    const passedF = vF.validate();
+    assertEquals(passedF, false);
+
+    // console.log(vF.getErrors());
   },
 );

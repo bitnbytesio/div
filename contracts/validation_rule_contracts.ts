@@ -1,6 +1,7 @@
 export interface ValidationRuleContract {
   name: string;
   handler: Function;
+  args?: any;
 }
 
 export interface ValidationRulesContract {
