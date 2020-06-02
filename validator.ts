@@ -11,6 +11,7 @@ import { NiceNamesContract } from "./contracts/nicenames_contracts.ts";
 import * as MessagesProvider from "./messages/mod.ts";
 
 import { messageParser } from "./util/message_parser_util.ts";
+import { getKeyValue } from "./util/obj_util.ts";
 
 import * as RulesProvider from "./rules/mod.ts";
 
@@ -122,8 +123,6 @@ export class Validator {
       if (ruleArgsStr) {
         args = ruleArgsStr.split(",");
       }
-
-      const getKeyValue = (key: string) => (obj: any) => obj[key];
 
       const ruleObj = getKeyValue(ruleName)(RulesProvider);
 
