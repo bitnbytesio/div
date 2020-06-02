@@ -1,0 +1,16 @@
+# ide
+.idea
+.vscode
+
+# others
+logs
+*.log
+.DS_Store
+
+# node related
+npm-debug.log
+node_modules/
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# TypeScript cache
+*.tsbuildinfo
