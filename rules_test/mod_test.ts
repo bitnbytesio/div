@@ -1,1 +1,1 @@
-import "./accepted_test.ts";
+import "./accepted_rule_test.ts";

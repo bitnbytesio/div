@@ -1,11 +1,11 @@
-import { ValidatorErrorContract } from "./contracts/validator_error.ts";
-import { MessagesContract } from "./contracts/message.ts";
+import { ValidatorErrorContract } from "./contracts/validator_error_contracts.ts";
+import { MessagesContract } from "./contracts/message_contracts.ts";
 import {
   ValidationRuleContract,
   ValidationRulesContract,
-} from "./contracts/validation_rule.ts";
+} from "./contracts/validation_rule_contracts.ts";
 
-import { NiceNamesContract } from "./contracts/nicenames.ts";
+import { NiceNamesContract } from "./contracts/nicenames_contracts.ts";
 
 import * as Messages from "./messages/mod.ts";
 
