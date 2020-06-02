@@ -2,6 +2,9 @@
 
 DIV is a validation library for [Deno](https://deno.land/) inspired by [node-input-validator](https://www.npmjs.com/package/node-input-validator).
 
+- [Getting Started](#getting-started)
+- [Rules](#rules)
+
 
 ## Getting Started 
 
@@ -24,6 +27,11 @@ if (v.validate()) {
   // validation failed
 }
 ```
+
+## Rules
+
+**accepted**  
+The field under validation must be yes, on, 1, or true.
 
 ## Authors
 
