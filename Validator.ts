@@ -1,6 +1,9 @@
-import { ValidatorError } from "./contracts/ValidatorError.ts";
-import { Messages } from "./contracts/Message.ts";
-import { ValidationRule, ValidationRules } from "./contracts/ValidationRule.ts";
+import { ValidatorError } from "./contracts/validator_error.ts";
+import { Messages } from "./contracts/message.ts";
+import {
+  ValidationRule,
+  ValidationRules,
+} from "./contracts/validation_rule.ts";
 
 export class Validator {
   errors: ValidatorError = {};
@@ -22,7 +25,7 @@ export class Validator {
           if (!validationRule.handler(value)) {
             this.createAttributeError(attrName, validationRule.name, value);
           }
-        })
+        });
       }
     });
 
@@ -44,7 +47,11 @@ export class Validator {
     };
   }
 
-  createAttributeErrorMessage(attrName: string, ruleName: string, value?: any): string {
+  createAttributeErrorMessage(
+    attrName: string,
+    ruleName: string,
+    value?: any,
+  ): string {
     return `The ${attrName} validation failed using rule ${ruleName} againest ${value}`;
   }
 }

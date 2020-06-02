@@ -1,8 +1,10 @@
-import { ValidationRule } from '../contracts/ValidationRule.ts';
+import { ValidationRule } from "../contracts/validation_rule.ts";
 
-export const accepted = (args: Array<string> = ['true', '1', 'yes', 'on']): ValidationRule => {
+export function accepted(
+  args: Array<string> = ["true", "1", "yes", "on"],
+): ValidationRule {
   return {
-    name: 'accepted',
+    name: "accepted",
     handler: (value: any) => {
       if (args.indexOf(String(value)) >= 0) {
         return true;
@@ -10,4 +12,4 @@ export const accepted = (args: Array<string> = ['true', '1', 'yes', 'on']): Vali
       return false;
     },
   };
-};
+}
