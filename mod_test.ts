@@ -1,6 +1,6 @@
 import { assertEquals } from "./test_deps.ts";
 import { Validator, Rules } from "./mod.ts";
-import "./rules_test/mod_test.ts";
+// import "./rules_test/mod_test.ts";
 
 Deno.test(
   "validator:validate",
