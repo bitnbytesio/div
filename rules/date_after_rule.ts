@@ -1,5 +1,5 @@
 import { ValidationRuleContract } from "../contracts/validation_rule_contracts.ts";
-import { moment } from "https://deno.land/x/moment/moment.ts";
+import { moment } from "../deps.ts";
 import { dateFormats } from "../util/date_util.ts";
 
 export function dateAfter(args: Array<any>): ValidationRuleContract {

@@ -10,6 +10,6 @@ export function accepted(
         return true;
       }
       return false;
-    },
+    }
   };
 }
