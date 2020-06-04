@@ -1,6 +1,9 @@
 import { ValidationRuleContract } from "../contracts/validation_rule_contracts.ts";
 
-export function arrayUniqueObjects(value: any, args: Array<any>): ValidationRuleContract {
+export function arrayUniqueObjects(
+  value: any,
+  args: Array<any>,
+): ValidationRuleContract {
   return {
     name: "arrayUniqueObjects",
     handler: (value: any) => {
@@ -9,7 +12,7 @@ export function arrayUniqueObjects(value: any, args: Array<any>): ValidationRule
       }
 
       const result = new Set(value.map((o) => {
-        let output = '';
+        let output = "";
 
         // eslint-disable-next-line no-restricted-syntax
         for (const attr of args) {
@@ -19,6 +22,6 @@ export function arrayUniqueObjects(value: any, args: Array<any>): ValidationRule
         return output;
       }));
       return result.size === value.length;
-    }
+    },
   };
 }
