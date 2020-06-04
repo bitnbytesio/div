@@ -11,7 +11,7 @@ import { NiceNamesContract } from "./contracts/nicenames_contracts.ts";
 import * as MessagesProvider from "./messages/mod.ts";
 
 import { messageParser } from "./util/message_parser_util.ts";
-import { getKeyValue } from "./util/obj_util.ts";
+import { getKeyValue, getValueByStringNotation } from "./util/obj_util.ts";
 import { reallyEmpty } from "./util/ops_util.ts";
 
 import * as RulesProvider from "./rules/mod.ts";
@@ -200,11 +200,15 @@ export class Validator {
    * @param attr attribute name
    */
   getAttributeValue(attr: string): string {
-    return this.inputs[attr];
+    if (attr.indexOf('.') < 0) {
+      return this.inputs[attr];
+    }
+
+    return getValueByStringNotation(this.inputs, attr);
   }
 
   didAttributeHasValue(attr: string): boolean {
-    return this.inputs[attr] === undefined ? true : false;
+    return this.getAttributeValue(attr) === undefined ? true : false;
   }
 
   /**

@@ -18,3 +18,20 @@ export function namedArgs(params: Array<string>) {
 
   return obj;
 }
+
+export function getValueByStringNotation(object: any, notation: string): string {
+  const notationArr: Array<string> = notation.split('.');
+
+  let value: any;
+
+  notationArr.map((item) => {
+    if (value === undefined) {
+      value = object[item];
+    } else {
+      value = value[item];
+    }
+    return value;
+  });
+
+  return value;
+}
