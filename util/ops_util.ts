@@ -1,7 +1,8 @@
-export function reallyEmpty(value: any) {
-  if (!value && [false, 0].indexOf(value) < 0) {
-    return true;
-  }
+import { validator } from "../deps.ts";
 
-  return !value.toString().trim();
+export function reallyEmpty(value: any): boolean {
+  return validator.isEmpty(
+    (value === undefined || value === null ? "" : value) + "",
+    { ignore_whitespace: false },
+  );
 }

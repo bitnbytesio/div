@@ -2,6 +2,7 @@ export interface ValidationRuleContract {
   name: string;
   handler: Function;
   args?: any;
+  nullable?: boolean;
 }
 
 export interface ValidationRulesContract {

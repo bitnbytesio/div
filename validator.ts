@@ -12,6 +12,7 @@ import * as MessagesProvider from "./messages/mod.ts";
 
 import { messageParser } from "./util/message_parser_util.ts";
 import { getKeyValue } from "./util/obj_util.ts";
+import { reallyEmpty } from "./util/ops_util.ts";
 
 import * as RulesProvider from "./rules/mod.ts";
 
@@ -21,6 +22,17 @@ interface AttributeValidationMinimalInfo {
   attrValue?: any;
   ruleArgs?: any;
 }
+
+const implicitRules = [
+  "required",
+  "requiredIf",
+  "requiredNotIf",
+  "requiredWith",
+  "requiredWithout",
+  "accepted",
+  "sometimes",
+  "nullable",
+];
 
 export class Validator {
   errors: ValidatorErrorContract = {};
@@ -124,13 +136,20 @@ export class Validator {
         args = ruleArgsStr.split(",");
       }
 
-      const ruleObj = getKeyValue(ruleName)(RulesProvider);
+      const ruleProvider = getKeyValue(ruleName)(RulesProvider);
 
-      if (!ruleObj) {
+      if (!ruleProvider) {
         throw new Error(`Rule ${ruleName} does not exists.`);
       }
 
-      rulesArr.push(ruleObj(args));
+      const ruleObj = ruleProvider(args);
+
+      // if (implicitRules.indexOf(ruleName) >= 0) {
+      //   rulesArr.unshift(ruleObj);
+      //   return;
+      // }
+
+      rulesArr.push(ruleObj);
     });
 
     return rulesArr;
@@ -145,8 +164,25 @@ export class Validator {
     attrName: string,
     attrRules: Array<ValidationRuleContract>,
   ) {
+    attrRules.sort((obj) => {
+      return (implicitRules.indexOf(obj.name) >= 0) ? -1 : 1;
+    });
+
     attrRules.forEach((validationRule: ValidationRuleContract) => {
       const attrValue = this.getAttributeValue(attrName);
+
+      if (
+        // rule is implicit and attribute value is empty
+        (implicitRules.indexOf(validationRule.name) < 0 &&
+          reallyEmpty(attrValue)) ||
+        // attribute can be nullable
+        (validationRule.name === "nullable" && attrValue === null) ||
+        // attribute will only be validated if presents
+        (validationRule.name === "sometimes" &&
+          this.didAttributeHasValue(attrValue) === false)
+      ) {
+        return;
+      }
 
       if (!validationRule.handler(attrValue)) {
         this.createAttributeError({
@@ -164,7 +200,11 @@ export class Validator {
    * @param attr attribute name
    */
   getAttributeValue(attr: string): string {
-    return this.inputs[attr] || null;
+    return this.inputs[attr];
+  }
+
+  didAttributeHasValue(attr: string): boolean {
+    return this.inputs[attr] === undefined ? true : false;
   }
 
   /**
