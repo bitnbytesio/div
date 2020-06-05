@@ -11,7 +11,11 @@ import { NiceNamesContract } from "./contracts/nicenames_contracts.ts";
 import * as MessagesProvider from "./messages/mod.ts";
 
 import { messageParser } from "./util/message_parser_util.ts";
-import { getKeyValue, getValueByStringNotation, getValuesByWildCardStringNotation } from "./util/obj_util.ts";
+import {
+  getKeyValue,
+  getValueByStringNotation,
+  getValuesByWildCardStringNotation,
+} from "./util/obj_util.ts";
 import { reallyEmpty } from "./util/ops_util.ts";
 
 import * as RulesProvider from "./rules/mod.ts";
@@ -46,7 +50,9 @@ export class Validator {
 
   hasNestedRules: boolean = false;
 
-  parsedRulesCollection: ValidationRulesContract | ValidationRuleStringNotationContract = {};
+  parsedRulesCollection:
+    | ValidationRulesContract
+    | ValidationRuleStringNotationContract = {};
 
   constructor(
     private inputs: any,
@@ -69,7 +75,9 @@ export class Validator {
       return;
     }
 
-    const { notationMap, notationsVals } = getValuesByWildCardStringNotation(this.inputs);
+    const { notationMap, notationsVals } = getValuesByWildCardStringNotation(
+      this.inputs,
+    );
     this.notationMap = notationMap;
     this.notationVals = notationsVals;
 
@@ -87,7 +95,7 @@ export class Validator {
     let attr: string;
 
     for (attr of Object.keys(this.rules)) {
-      if (attr.indexOf('.')) {
+      if (attr.indexOf(".")) {
         this.hasNestedRules = true;
       } else {
         this.parsedRulesCollection[attr] = this.rules[attr];

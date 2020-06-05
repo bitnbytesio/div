@@ -87,7 +87,6 @@ Deno.test(
 //     let passed = v.validate();
 //     assertEquals(passed, true);
 
-
 //     // shoud fail as per alpha
 //     v = new Validator(
 //       { user: { name: "123" } },
