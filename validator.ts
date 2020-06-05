@@ -11,7 +11,11 @@ import { NiceNamesContract } from "./contracts/nicenames_contracts.ts";
 import * as MessagesProvider from "./messages/mod.ts";
 
 import { messageParser } from "./util/message_parser_util.ts";
-import { getKeyValue, getValueByStringNotation, getValuesByWildCardStringNotation } from "./util/obj_util.ts";
+import {
+  getKeyValue,
+  getValueByStringNotation,
+  getValuesByWildCardStringNotation,
+} from "./util/obj_util.ts";
 import { reallyEmpty } from "./util/ops_util.ts";
 
 import * as RulesProvider from "./rules/mod.ts";
@@ -63,7 +67,9 @@ export class Validator {
   }
 
   parseInputs() {
-    const { notationMap, notationsVals } = getValuesByWildCardStringNotation(this.inputs);
+    const { notationMap, notationsVals } = getValuesByWildCardStringNotation(
+      this.inputs,
+    );
     this.notationMap = notationMap;
     this.notationVals = notationsVals;
 
@@ -79,7 +85,7 @@ export class Validator {
 
   parseRules() {
     for (let attr of Object.keys(this.rules)) {
-      if (attr.indexOf('.')) {
+      if (attr.indexOf(".")) {
         this.hasNestedRules = true;
         break;
       }

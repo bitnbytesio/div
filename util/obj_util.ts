@@ -40,7 +40,8 @@ export function getValueByStringNotation(
 }
 
 export function isIterable(object: any) {
-  return object != null && (typeof object === 'object' || Array.isArray(object));
+  return object != null &&
+    (typeof object === "object" || Array.isArray(object));
 }
 
 interface NotationLoopOptions {
@@ -50,9 +51,12 @@ interface NotationLoopOptions {
   seperator?: string;
 }
 
-export function getValuesByWildCardStringNotation(iterable: any, options: NotationLoopOptions = {}) {
+export function getValuesByWildCardStringNotation(
+  iterable: any,
+  options: NotationLoopOptions = {},
+) {
   const { prefix, iterations, seperator } = Object.assign(
-    { prefix: [], iterations: 10000, seperator: '.' },
+    { prefix: [], iterations: 10000, seperator: "." },
     options,
   );
 
@@ -69,12 +73,14 @@ export function getValuesByWildCardStringNotation(iterable: any, options: Notati
       throw new Error(`Max(${iterations}) repetation was reached.`);
     }
 
-
     Object.keys(data).forEach((key: any, index: number) => {
       const v = data[key];
 
       const notationKey = `${[...prefix, key].join(seperator)}`;
-      const notationMapKey = notationKey.replace(/\.[0-9+]\./g, '.*.').replace(/^[0-9+]\./g, '*.');
+      const notationMapKey = notationKey.replace(/\.[0-9+]\./g, ".*.").replace(
+        /^[0-9+]\./g,
+        "*.",
+      );
       notationMap[notationMapKey] = notationMap[notationMapKey] || [];
       notationMap[notationMapKey].push(notationKey);
 
