@@ -72,14 +72,17 @@ export function getValuesByWildCardStringNotation(iterable: any, options: Notati
 
     Object.keys(data).forEach((key: any, index: number) => {
       const v = data[key];
+
+      const notationKey = `${[...prefix, key].join(seperator)}`;
+      const notationMapKey = notationKey.replace(/\.[0-9+]\./g, '.*.').replace(/^[0-9+]\./g, '*.');
+      notationMap[notationMapKey] = notationMap[notationMapKey] || [];
+      notationMap[notationMapKey].push(notationKey);
+
       if (isIterable(v)) {
         parse(v, [...prefix, key]);
-      } else {
-        const notationKey = `${[...prefix, key].join(seperator)}`;
         notationsVals[notationKey] = v;
-        const notationMapKey = notationKey.replace(/\.[0-9+]\./g, '.*.').replace(/^[0-9+]\./g, '*.');
-        notationMap[notationMapKey] = notationMap[notationMapKey] || [];
-        notationMap[notationMapKey].push(notationKey);
+      } else {
+        notationsVals[notationKey] = v;
       }
     });
   };
