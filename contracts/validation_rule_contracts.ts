@@ -13,7 +13,6 @@ export interface ValidationRuleStringNotationContract {
   [key: string]: string;
 }
 
-
 export interface ValidatorContract {
   getAttributeValue(attrName: string): any;
 }

@@ -97,7 +97,7 @@ export class Validator {
     for (attr of Object.keys(this.rules)) {
       if (attr.indexOf(".")) {
         this.hasNestedRules = true;
-        if (attr.indexOf('*') < 0) {
+        if (attr.indexOf("*") < 0) {
           this.parsedRulesCollection[attr] = this.rules[attr];
         }
       } else {

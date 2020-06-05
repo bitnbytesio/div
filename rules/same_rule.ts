@@ -1,4 +1,7 @@
-import { ValidationRuleContract, ValidatorContract } from "../contracts/validation_rule_contracts.ts";
+import {
+  ValidationRuleContract,
+  ValidatorContract,
+} from "../contracts/validation_rule_contracts.ts";
 
 export function same(
   args: Array<string>,

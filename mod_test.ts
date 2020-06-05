@@ -114,19 +114,18 @@ Deno.test(
     assertEquals(passed, false);
     assertEquals(v.errors["user.name"].rule, "required");
 
-
     v = new Validator(
-      { user: { name: '123' } },
+      { user: { name: "123" } },
       {
         user: [Rules.required()],
-        "user.name": [Rules.string(), Rules.alpha()]
+        "user.name": [Rules.string(), Rules.alpha()],
       },
     );
     passed = v.validate();
     assertEquals(passed, false);
     assertEquals(v.errors["user.name"].rule, "alpha");
-
-  });
+  },
+);
 
 Deno.test(
   "validator:1 level nested rules with undefined value",
@@ -135,7 +134,7 @@ Deno.test(
     let v = new Validator(
       { user: undefined },
       {
-        "user.name": [Rules.string(), Rules.alpha(), Rules.required()]
+        "user.name": [Rules.string(), Rules.alpha(), Rules.required()],
       },
     );
     let passed = v.validate();
@@ -145,7 +144,7 @@ Deno.test(
     v = new Validator(
       { user: undefined },
       {
-        "user.name": [Rules.string(), Rules.alpha()]
+        "user.name": [Rules.string(), Rules.alpha()],
       },
     );
     passed = v.validate();
@@ -155,12 +154,13 @@ Deno.test(
       { user: undefined },
       {
         user: [Rules.required()],
-        "user.name": [Rules.string(), Rules.alpha()]
+        "user.name": [Rules.string(), Rules.alpha()],
       },
     );
     passed = v.validate();
     assertEquals(passed, false);
-  });
+  },
+);
 
 Deno.test(
   "validator:1 level nested rules with empty {} value",
@@ -180,7 +180,8 @@ Deno.test(
     );
     passed = v.validate();
     assertEquals(passed, true);
-  });
+  },
+);
 
 Deno.test(
   "validator:3 level nested rules",
@@ -210,12 +211,16 @@ Deno.test(
               colors: ["#fff", "#000"],
             },
           ],
-        }
+        },
       },
       {
         "products.name": [Rules.string(), Rules.alpha(), Rules.required()],
         "products.attributes.*.colors": [Rules.array(), Rules.required()],
-        "products.attributes.*.colors.*": [Rules.string(), Rules.alpha(), Rules.required()],
+        "products.attributes.*.colors.*": [
+          Rules.string(),
+          Rules.alpha(),
+          Rules.required(),
+        ],
       },
     );
     let passed = v.validate();
