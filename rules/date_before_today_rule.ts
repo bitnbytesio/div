@@ -9,11 +9,14 @@ export function dateBeforeToday(
     name: "dateBeforeToday",
     handler: (value: any) => {
       // after date moment object
-      const mAfterDate = moment().subtract(args[0], args[1] || 'days');
+      const mAfterDate = moment().subtract(args[0], args[1] || "days");
       // input date moment object
       const mDate = moment(value, dateFormats);
 
-      if (!mAfterDate.isValid() || !mDate.isValid() || mAfterDate.valueOf() < mDate.valueOf()) {
+      if (
+        !mAfterDate.isValid() || !mDate.isValid() ||
+        mAfterDate.valueOf() < mDate.valueOf()
+      ) {
         return false;
       }
 
