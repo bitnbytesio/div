@@ -35,3 +35,53 @@ export function getValueByStringNotation(object: any, notation: string): string 
 
   return value;
 }
+
+export function isIterable(object: any) {
+  return object != null && typeof object === 'object' || Array.isArray(object);
+}
+
+interface NotationLoopOptions {
+  prefix?: Array<any>;
+  iterations?: number;
+  matchKeys?: Array<string>;
+  seperator?: string;
+}
+
+export function getValuesByWildCardStringNotation(iterable: any, options: NotationLoopOptions = {}) {
+  const { prefix, iterations, seperator } = Object.assign(
+    { prefix: [], iterations: 10000, seperator: '.' },
+    options,
+  );
+
+  const notationsVals: any = {};
+  const notationMap: any = {};
+
+  let iterationsCount = 1;
+
+  const parse = (data: any, prefix: Array<any>) => {
+    iterationsCount++;
+
+    if (iterationsCount > iterations) {
+      // eslint-disable-next-line no-console
+      throw new Error(`Max(${iterations}) repetation was reached.`);
+    }
+
+
+    Object.keys(data).forEach((key: any, index: number) => {
+      const v = data[key];
+      if (isIterable(v)) {
+        parse(v, [...prefix, key]);
+      } else {
+        const notationKey = `${prefix.join(seperator)}.${key}`;
+        notationsVals[notationKey] = v;
+        const notationMapKey = notationKey.replace(/\.[0-9+]\./g, '.*.').replace(/^[0-9+]\./g, '*.');
+        notationMap[notationMapKey] = notationMap[notationMapKey] || [];
+        notationMap[notationMapKey].push(notationKey);
+      }
+    });
+  };
+
+  parse(iterable, [...prefix]);
+
+  return { notationsVals, notationMap };
+}
