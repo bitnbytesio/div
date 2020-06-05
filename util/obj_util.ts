@@ -19,8 +19,11 @@ export function namedArgs(params: Array<string>) {
   return obj;
 }
 
-export function getValueByStringNotation(object: any, notation: string): string {
-  const notationArr: Array<string> = notation.split('.');
+export function getValueByStringNotation(
+  object: any,
+  notation: string,
+): string {
+  const notationArr: Array<string> = notation.split(".");
 
   let value: any;
 

@@ -94,7 +94,7 @@ Deno.test(
     );
     passed = v.validate();
     assertEquals(passed, false);
-    assertEquals(v.errors['user.name'].rule, 'alpha');
+    assertEquals(v.errors["user.name"].rule, "alpha");
 
     // should fail of required as of empty object
     v = new Validator(
@@ -103,7 +103,7 @@ Deno.test(
     );
     passed = v.validate();
     assertEquals(passed, false);
-    assertEquals(v.errors['user.name'].rule, 'required');
+    assertEquals(v.errors["user.name"].rule, "required");
 
     // should fail of required as of string instead of object
     v = new Validator(
@@ -112,7 +112,7 @@ Deno.test(
     );
     passed = v.validate();
     assertEquals(passed, false);
-    assertEquals(v.errors['user.name'].rule, 'required');
+    assertEquals(v.errors["user.name"].rule, "required");
 
     // should fail of required as of undefined value
     v = new Validator(
@@ -121,7 +121,7 @@ Deno.test(
     );
     passed = v.validate();
     assertEquals(passed, false);
-    assertEquals(v.errors['user.name'].rule, 'required');
+    assertEquals(v.errors["user.name"].rule, "required");
 
     // should fail of required as of empty input
     v = new Validator(
@@ -130,18 +130,17 @@ Deno.test(
     );
     passed = v.validate();
     assertEquals(passed, false);
-    assertEquals(v.errors['user.name'].rule, 'required');
+    assertEquals(v.errors["user.name"].rule, "required");
 
     // check 3 level nesting
     v = new Validator(
-      { user: { name: "Deno", address: { city: 'rajpura' } } },
-      { "user.address.city": [Rules.string(), Rules.alpha(), Rules.required()] },
+      { user: { name: "Deno", address: { city: "rajpura" } } },
+      {
+        "user.address.city": [Rules.string(), Rules.alpha(), Rules.required()],
+      },
     );
     passed = v.validate();
     assertEquals(passed, true);
-
-
-
   },
 );
 

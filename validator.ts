@@ -200,7 +200,7 @@ export class Validator {
    * @param attr attribute name
    */
   getAttributeValue(attr: string): string {
-    if (attr.indexOf('.') < 0) {
+    if (attr.indexOf(".") < 0) {
       return this.inputs[attr];
     }
 
