@@ -41,10 +41,12 @@ export class Validator {
 
   hasCustomMessages: boolean = false;
 
-  notationMap: any;
-  notationVals: any;
+  notationMap: any = {};
+  notationVals: any = {};
 
   hasNestedRules: boolean = false;
+
+  parsedRulesCollection: ValidationRulesContract | ValidationRuleStringNotationContract = {};
 
   constructor(
     private inputs: any,
@@ -63,6 +65,10 @@ export class Validator {
   }
 
   parseInputs() {
+    if (!this.hasNestedRules) {
+      return;
+    }
+
     const { notationMap, notationsVals } = getValuesByWildCardStringNotation(this.inputs);
     this.notationMap = notationMap;
     this.notationVals = notationsVals;
@@ -71,17 +77,20 @@ export class Validator {
       const attrRules = this.rules[key];
       if (attrRules) {
         this.notationMap[key].forEach((attrName: string) => {
-          this.rules[attrName] = attrRules;
+          this.parsedRulesCollection[attrName] = attrRules;
         });
       }
     });
   }
 
   parseRules() {
-    for (let attr of Object.keys(this.rules)) {
+    let attr: string;
+
+    for (attr of Object.keys(this.rules)) {
       if (attr.indexOf('.')) {
         this.hasNestedRules = true;
-        break;
+      } else {
+        this.parsedRulesCollection[attr] = this.rules[attr];
       }
     }
   }
@@ -132,8 +141,11 @@ export class Validator {
    * validate inputs againest rules
    */
   validate(): boolean {
-    Object.keys(this.rules).forEach((attrName) => {
-      const attrRules = this.rules[attrName];
+    // console.log('validate called');
+    // console.log(this.inputs, this.rules, this.parsedRulesCollection, this.notationVals, this.notationMap);
+    // console.log('Woops');
+    Object.keys(this.parsedRulesCollection).forEach((attrName) => {
+      const attrRules = this.parsedRulesCollection[attrName];
 
       if (!attrRules) {
         return;
@@ -219,7 +231,7 @@ export class Validator {
       ) {
         return;
       }
-
+      // console.log('attr val', attrValue);
       if (!validationRule.handler(attrValue)) {
         this.createAttributeError({
           attrName,

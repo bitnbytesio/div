@@ -5,3 +5,4 @@ export { alpha } from "./alpha_rule.ts";
 export { required } from "./required_rule.ts";
 
 export { string } from "./string_rule.ts";
+export { object } from "./object_rule.ts";
