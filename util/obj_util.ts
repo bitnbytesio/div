@@ -40,7 +40,7 @@ export function getValueByStringNotation(
 }
 
 export function isIterable(object: any) {
-  return object != null && typeof object === 'object' || Array.isArray(object);
+  return object != null && (typeof object === 'object' || Array.isArray(object));
 }
 
 interface NotationLoopOptions {
@@ -75,7 +75,7 @@ export function getValuesByWildCardStringNotation(iterable: any, options: Notati
       if (isIterable(v)) {
         parse(v, [...prefix, key]);
       } else {
-        const notationKey = `${prefix.join(seperator)}.${key}`;
+        const notationKey = `${[...prefix, key].join(seperator)}`;
         notationsVals[notationKey] = v;
         const notationMapKey = notationKey.replace(/\.[0-9+]\./g, '.*.').replace(/^[0-9+]\./g, '*.');
         notationMap[notationMapKey] = notationMap[notationMapKey] || [];

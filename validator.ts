@@ -11,7 +11,7 @@ import { NiceNamesContract } from "./contracts/nicenames_contracts.ts";
 import * as MessagesProvider from "./messages/mod.ts";
 
 import { messageParser } from "./util/message_parser_util.ts";
-import { getKeyValue, getValueByStringNotation } from "./util/obj_util.ts";
+import { getKeyValue, getValueByStringNotation, getValuesByWildCardStringNotation } from "./util/obj_util.ts";
 import { reallyEmpty } from "./util/ops_util.ts";
 
 import * as RulesProvider from "./rules/mod.ts";
@@ -41,6 +41,11 @@ export class Validator {
 
   hasCustomMessages: boolean = false;
 
+  notationMap: any;
+  notationVals: any;
+
+  hasNestedRules: boolean = false;
+
   constructor(
     private inputs: any,
     private rules:
@@ -49,6 +54,36 @@ export class Validator {
     private customMessages: MessagesContract = {},
   ) {
     this.hasCustomMessages = Object.keys(customMessages).length > 0;
+    this.parse();
+  }
+
+  parse() {
+    this.parseRules();
+    this.parseInputs();
+  }
+
+  parseInputs() {
+    const { notationMap, notationsVals } = getValuesByWildCardStringNotation(this.inputs);
+    this.notationMap = notationMap;
+    this.notationVals = notationsVals;
+
+    Object.keys(this.notationMap).forEach((key) => {
+      const attrRules = this.rules[key];
+      if (attrRules) {
+        this.notationMap[key].forEach((attrName: string) => {
+          this.rules[attrName] = attrRules;
+        });
+      }
+    });
+  }
+
+  parseRules() {
+    for (let attr of Object.keys(this.rules)) {
+      if (attr.indexOf('.')) {
+        this.hasNestedRules = true;
+        break;
+      }
+    }
   }
 
   /**
@@ -74,6 +109,7 @@ export class Validator {
    */
   applyRules(rules: ValidationRulesContract) {
     this.rules = rules;
+    this.parse();
   }
 
   /**
@@ -200,11 +236,7 @@ export class Validator {
    * @param attr attribute name
    */
   getAttributeValue(attr: string): string {
-    if (attr.indexOf(".") < 0) {
-      return this.inputs[attr];
-    }
-
-    return getValueByStringNotation(this.inputs, attr);
+    return this.inputs[attr] || this.notationVals[attr];
   }
 
   didAttributeHasValue(attr: string): boolean {
