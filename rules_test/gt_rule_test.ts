@@ -4,7 +4,7 @@ import { gt } from "../rules/gt_rule.ts";
 import { ValidatorLite } from "../mock/validator_lite_mock.ts";
 
 Deno.test("rules:gt", function (): void {
-  const ruleHandler = gt([]).handler;
-  assertEquals(ruleHandler(4,{max:5}), true);
-  assertEquals(ruleHandler(3,{max:1}), false);
+  const ruleHandler = gt(['max']).handler;
+  assertEquals(ruleHandler(8, new ValidatorLite({ max: 5 })), true);
+  assertEquals(ruleHandler(8, new ValidatorLite({ max: 9 })), false);
 });

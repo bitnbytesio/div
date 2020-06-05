@@ -11,7 +11,9 @@ export function gt(
     handler: (value: any, v: ValidatorContract) => {
       const [anotherAttr] = args;
 
-      if (value > v.getAttributeValue(anotherAttr)) {
+      const anotherAttrVal = v.getAttributeValue(anotherAttr);
+
+      if (Number(value) > Number(anotherAttrVal)) {
         return true;
       }
 
