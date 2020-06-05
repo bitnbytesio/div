@@ -97,6 +97,9 @@ export class Validator {
     for (attr of Object.keys(this.rules)) {
       if (attr.indexOf(".")) {
         this.hasNestedRules = true;
+        if (attr.indexOf('*') < 0) {
+          this.parsedRulesCollection[attr] = this.rules[attr];
+        }
       } else {
         this.parsedRulesCollection[attr] = this.rules[attr];
       }
@@ -240,7 +243,7 @@ export class Validator {
         return;
       }
       // console.log('attr val', attrValue);
-      if (!validationRule.handler(attrValue)) {
+      if (!validationRule.handler(attrValue, this)) {
         this.createAttributeError({
           attrName,
           attrValue,
@@ -255,7 +258,7 @@ export class Validator {
    * get attribute value by its name
    * @param attr attribute name
    */
-  getAttributeValue(attr: string): string {
+  getAttributeValue(attr: string): any {
     return this.inputs[attr] || this.notationVals[attr];
   }
 

@@ -1,6 +1,6 @@
 import { ValidationRuleContract } from "../contracts/validation_rule_contracts.ts";
 
-export function array(value: any): ValidationRuleContract {
+export function array(): ValidationRuleContract {
   return {
     name: "array",
     handler: (value: any) => {
