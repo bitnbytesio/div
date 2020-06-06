@@ -8,8 +8,22 @@ Deno.test("rules:in", function (): void {
   assertEquals(
     ruleHandler(
       "public",
-      new ValidatorLite({ in: ["private", "public", "draft"] }),
+      new ValidatorLite({ in: "private,public,draft" }),
     ),
     true,
-  );
+  ),
+    assertEquals(
+      ruleHandler(
+        "public",
+        new ValidatorLite({ in: "public" }),
+      ),
+      true,
+    ),
+    assertEquals(
+      ruleHandler(
+        "draft",
+        new ValidatorLite({ in: "public,private" }),
+      ),
+      false,
+    );
 });
