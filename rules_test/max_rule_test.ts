@@ -8,5 +8,8 @@ Deno.test("rules:max", function (): void {
   assertEquals(ruleHandler("10", new ValidatorLite({ max: "20" })), true);
   assertEquals(ruleHandler(10, new ValidatorLite({ max: "20" })), true);
   assertEquals(ruleHandler("30", new ValidatorLite({ max: "20" })), false);
-  assertEquals(ruleHandler("Harcharn Singh", new ValidatorLite({ max: "20" })), false);
+  assertEquals(
+    ruleHandler("Harcharn Singh", new ValidatorLite({ max: "20" })),
+    false,
+  );
 });
