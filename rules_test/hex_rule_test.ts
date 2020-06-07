@@ -1,7 +1,6 @@
 import { assertEquals } from "../test_deps.ts";
 
 import { hex } from "../rules/hex_rule.ts";
-import { ValidatorLite } from "../mock/validator_lite_mock.ts";
 
 Deno.test("rules:hex", function (): void {
   const ruleHandler = hex().handler;
